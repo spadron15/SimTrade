@@ -26,7 +26,8 @@ public enum ButtonGlyph
     Trash,
     Close,
     AddUser,
-    About
+    About,
+    Help
 }
 
 public partial class IconLabel : UserControl
@@ -128,6 +129,7 @@ public partial class IconLabel : UserControl
         ButtonGlyph.Trash => "M3.4,4.6 H12.6 M6.2,4.6 V3 H9.8 V4.6 M5.2,4.6 L5.8,13.2 H10.2 L10.8,4.6",
         ButtonGlyph.Close => "M4,4 L12,12 M12,4 L4,12",
         ButtonGlyph.About => "M8,2.4 A5.6,5.6 0 1 0 8,13.6 A5.6,5.6 0 1 0 8,2.4 M8,7.2 V11.2 M8,5 m-0.6,0 a0.6,0.6 0 1 0 1.2,0 a0.6,0.6 0 1 0 -1.2,0",
+        ButtonGlyph.Help => "M8,2.4 A5.6,5.6 0 1 0 8,13.6 A5.6,5.6 0 1 0 8,2.4 M8,11.5 m-0.55,0 a0.55,0.55 0 1 0 1.1,0 a0.55,0.55 0 1 0 -1.1,0 M6.5,6.1 C6.5,4.9 7.3,4.1 8.35,4.1 C9.45,4.1 10.2,4.85 10.2,5.85 C10.2,6.7 9.7,7.25 8.9,7.7 C8.35,8 8,8.4 8,9.1 V9.7",
         _ => ""
     };
 }

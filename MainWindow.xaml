@@ -213,6 +213,10 @@
                                     Command="{Binding ShowActiveEquityChartCommand}" IsEnabled="{Binding HasActive}">
                                 <ctrl:IconLabel Glyph="Chart" Text="Evolución" />
                             </Button>
+                            <Button Margin="0,0,8,0" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ShowPageHelpCommand}">
+                                <ctrl:IconLabel Glyph="Help" Text="Ayuda" />
+                            </Button>
                             <Grid>
                                 <Button x:Name="PortfolioColumnsButton"
                                         Style="{StaticResource SecondaryButton}"
@@ -424,7 +428,13 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Operar" Style="{StaticResource PageTitle}" />
+                        <Grid>
+                            <TextBlock Text="Operar" Style="{StaticResource PageTitle}" VerticalAlignment="Center" />
+                            <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Style="{StaticResource SecondaryButton}" Command="{Binding ShowPageHelpCommand}">
+                                <ctrl:IconLabel Glyph="Help" Text="Ayuda" />
+                            </Button>
+                        </Grid>
                         <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,16,0,0" Visibility="{Binding ShowNoAccount, Converter={StaticResource BoolVis}}">
                             <StackPanel>
                                 <TextBlock Text="Elige o crea una cuenta antes de operar" FontSize="18" FontWeight="SemiBold" />
@@ -780,9 +790,13 @@
                                     IsEnabled="{Binding HasPerformance}">
                                 <ctrl:IconLabel Glyph="Performance" Text="Comparar todas" />
                             </Button>
-                            <Button Style="{StaticResource SecondaryButton}"
+                            <Button Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"
                                     Command="{Binding ShowActiveEquityChartCommand}" IsEnabled="{Binding HasActive}">
                                 <ctrl:IconLabel Glyph="Chart" Text="Evolución" />
+                            </Button>
+                            <Button Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ShowPageHelpCommand}">
+                                <ctrl:IconLabel Glyph="Help" Text="Ayuda" />
                             </Button>
                         </StackPanel>
                     </Grid>
@@ -943,12 +957,18 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <StackPanel>
-                        <TextBlock Text="Análisis" Style="{StaticResource PageTitle}" />
-                        <TextBlock Text="Estadísticas de trading de la cuenta activa y ranking de contribución al P&amp;L del día."
-                                   Margin="0,6,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
-                        <TextBlock Text="{Binding UpdatedText}" Margin="0,4,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" />
-                    </StackPanel>
+                    <Grid>
+                        <StackPanel Margin="0,0,120,0">
+                            <TextBlock Text="Análisis" Style="{StaticResource PageTitle}" />
+                            <TextBlock Text="Estadísticas de trading de la cuenta activa y ranking de contribución al P&amp;L del día."
+                                       Margin="0,6,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding UpdatedText}" Margin="0,4,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" />
+                        </StackPanel>
+                        <Button HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Style="{StaticResource SecondaryButton}" Command="{Binding ShowPageHelpCommand}">
+                            <ctrl:IconLabel Glyph="Help" Text="Ayuda" />
+                        </Button>
+                    </Grid>
                     <UniformGrid Grid.Row="1" Columns="4" Margin="0,16,0,0">
                         <Border Style="{StaticResource Card}" Margin="0,0,8,0">
                             <StackPanel>
@@ -1086,6 +1106,10 @@
                             </Button>
                             <Button Margin="8,0,0,0" Style="{StaticResource SecondaryButton}" Command="{Binding BackupDatabaseCommand}">
                                 <ctrl:IconLabel Glyph="Save" Text="Respaldar BD" />
+                            </Button>
+                            <Button Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ShowPageHelpCommand}">
+                                <ctrl:IconLabel Glyph="Help" Text="Ayuda" />
                             </Button>
                         </StackPanel>
                     </DockPanel>
@@ -1231,11 +1255,17 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <StackPanel>
-                            <TextBlock Text="Cuentas" Style="{StaticResource PageTitle}" />
-                            <TextBlock Text="Cada cuenta tiene su propio efectivo, sus comisiones y su historial. El monto inicial sugerido es un millón de pesos."
-                                       Margin="0,8,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
-                        </StackPanel>
+                        <Grid>
+                            <StackPanel Margin="0,0,120,0">
+                                <TextBlock Text="Cuentas" Style="{StaticResource PageTitle}" />
+                                <TextBlock Text="Cada cuenta tiene su propio efectivo, sus comisiones y su historial. El monto inicial sugerido es un millón de pesos."
+                                           Margin="0,8,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <Button HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Style="{StaticResource SecondaryButton}" Command="{Binding ShowPageHelpCommand}">
+                                <ctrl:IconLabel Glyph="Help" Text="Ayuda" />
+                            </Button>
+                        </Grid>
                         <Grid Grid.Row="1" Margin="0,18,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="360" />
@@ -1514,7 +1544,14 @@
                                HorizontalAlignment="Left"
                                Stretch="Uniform"
                                RenderOptions.BitmapScalingMode="HighQuality" />
-                        <TextBlock Text="Acerca de SimTrade" Style="{StaticResource PageTitle}" Margin="0,18,0,0" TextWrapping="Wrap" />
+                        <Grid Margin="0,18,0,0">
+                            <TextBlock Text="Acerca de SimTrade" Style="{StaticResource PageTitle}" TextWrapping="Wrap"
+                                       Margin="0,0,120,0" VerticalAlignment="Center" />
+                            <Button HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Style="{StaticResource SecondaryButton}" Command="{Binding ShowPageHelpCommand}">
+                                <ctrl:IconLabel Glyph="Help" Text="Ayuda" />
+                            </Button>
+                        </Grid>
                         <TextBlock Margin="0,8,0,0"
                                    FontSize="15"
                                    Foreground="{StaticResource MutedBrush}"
@@ -1651,6 +1688,44 @@
                            VerticalAlignment="Center"
                            ToolTip="Horario regular del NASDAQ, de 9:30 a 16:00, hora del este de Estados Unidos. El fin de semana y los festivos cuentan hasta la siguiente apertura. El día después de Acción de Gracias y el 24 de diciembre cierran a la 1 de la tarde." />
             </Grid>
+        </Border>
+
+        <Border Grid.RowSpan="2" Grid.ColumnSpan="2"
+                Background="#D6000000"
+                Visibility="{Binding IsHelpOpen, Converter={StaticResource BoolVis}}">
+            <Border Width="760" MaxHeight="680" Margin="24" Padding="24"
+                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                    Background="{StaticResource SurfaceRaisedBrush}"
+                    BorderBrush="{StaticResource LineBrush}"
+                    BorderThickness="1"
+                    CornerRadius="16">
+                <DockPanel>
+                    <Grid DockPanel.Dock="Top" Margin="0,0,0,14">
+                        <StackPanel Margin="0,0,100,0">
+                            <TextBlock Text="{Binding HelpTitle}" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding HelpSubtitle}" Margin="0,6,0,0"
+                                       Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <Button Content="Cerrar" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Command="{Binding CloseHelpCommand}" Style="{StaticResource GhostButton}" />
+                    </Grid>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding HelpSections}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,14">
+                                        <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="SemiBold"
+                                                   Foreground="{StaticResource GoldBrush}" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding Body}" Margin="0,6,0,0"
+                                                   TextWrapping="Wrap" Foreground="{StaticResource TextBrush}"
+                                                   LineHeight="22" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
         </Border>
     </Grid>
 </Window>

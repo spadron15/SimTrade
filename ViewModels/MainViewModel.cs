@@ -1186,6 +1186,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(ShowWorkspaceHeader));
         DonationStatus = "";
         ContactStatus = "";
+        IsHelpOpen = false;
         if (value == AppPage.Rendimiento)
             _ = RefreshQuotesAsync();
     }
