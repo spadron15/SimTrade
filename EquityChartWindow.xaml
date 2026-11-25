@@ -1,0 +1,58 @@
+﻿<Window x:Class="SimTrade.EquityChartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:SimTrade.Controls"
+        Title="Evolución del patrimonio"
+        Width="920"
+        Height="580"
+        MinWidth="640"
+        MinHeight="420"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Background="{StaticResource BgBrush}"
+        Foreground="{StaticResource TextBrush}"
+        FontFamily="Segoe UI"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+    <DockPanel Margin="22,18,22,16">
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Margin="0,0,18,0">
+                <TextBlock x:Name="TitleText" FontSize="26" FontWeight="SemiBold" TextWrapping="Wrap" />
+                <TextBlock x:Name="SubtitleText" Margin="0,4,0,0" Foreground="{StaticResource MutedBrush}" FontSize="13" TextWrapping="Wrap" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock x:Name="EquityText" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center" />
+                <TextBlock x:Name="ChangeText" Margin="14,0,0,0" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+            </StackPanel>
+        </Grid>
+        <DockPanel DockPanel.Dock="Top" Margin="0,10,0,0">
+            <TextBlock Text="Benchmark"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource MutedBrush}"
+                       Margin="0,0,10,0" />
+            <ComboBox x:Name="BenchmarkBox"
+                      Width="220"
+                      DisplayMemberPath="Label"
+                      SelectionChanged="Benchmark_Changed" />
+            <TextBlock x:Name="BenchmarkLegend"
+                       Margin="14,0,0,0"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource MutedBrush}"
+                       FontSize="12" />
+        </DockPanel>
+        <TextBlock x:Name="Status"
+                   DockPanel.Dock="Top"
+                   Margin="0,8,0,14"
+                   FontSize="14"
+                   Foreground="{StaticResource TextBrush}"
+                   TextWrapping="Wrap"
+                   Text="Cargando historial…" />
+        <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="12">
+            <ctrl:LineChart x:Name="EquityChart" Margin="8,4,8,4" ValueFormat="C0" />
+        </Border>
+    </DockPanel>
+</Window>

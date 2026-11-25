@@ -1,0 +1,11 @@
+bin/
+obj/
+Publicacion/
+dist/
+.vs/
+*.user
+*.suo
+*.db
+*.db-shm
+*.db-wal
+_check_cash.py

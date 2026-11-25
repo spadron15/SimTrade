@@ -1,0 +1,47 @@
+<Window x:Class="SimTrade.JournalNoteWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:SimTrade.Controls"
+        Title="Diario de operación"
+        Width="480"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Background="{StaticResource SurfaceRaisedBrush}"
+        Foreground="{StaticResource TextBrush}"
+        FontFamily="Segoe UI"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+    <DockPanel Margin="22">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Style="{StaticResource SecondaryButton}" Margin="0,0,8,0" IsCancel="True" Click="Cancel_Click">
+                <ctrl:IconLabel Glyph="Close" Text="Cancelar" />
+            </Button>
+            <Button Style="{StaticResource PrimaryButton}" IsDefault="True" Click="Save_Click">
+                <ctrl:IconLabel Glyph="Save" Text="Guardar" />
+            </Button>
+        </StackPanel>
+        <StackPanel>
+            <TextBlock Text="Diario de operación" FontSize="22" FontWeight="SemiBold" />
+            <TextBlock x:Name="SubtitleText"
+                       Margin="0,6,0,14"
+                       Foreground="{StaticResource MutedBrush}"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="Nota"
+                       Style="{StaticResource SectionLabel}"
+                       Margin="0,0,0,6" />
+            <TextBox x:Name="NoteBox"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     MinHeight="120"
+                     MaxHeight="220"
+                     VerticalScrollBarVisibility="Auto"
+                     MaxLength="2000" />
+            <TextBlock Margin="0,8,0,0"
+                       FontSize="12"
+                       Foreground="{StaticResource FaintBrush}"
+                       Text="Criterio, tesis, emoción o lección de esta operación." />
+        </StackPanel>
+    </DockPanel>
+</Window>

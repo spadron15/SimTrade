@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>SimTrade</RootNamespace>
+    <AssemblyName>SimTrade</AssemblyName>
+    <ApplicationTitle>SimTrade</ApplicationTitle>
+    <ApplicationIcon>Assets\App.ico</ApplicationIcon>
+    <Product>SimTrade</Product>
+    <Company>SimTrade</Company>
+    <VersionMajorMinor>1.0</VersionMajorMinor>
+    <BuildNumberFile>$(MSBuildProjectDirectory)\build.number</BuildNumberFile>
+    <Description>Simulador de compra de acciones y ETFs en pesos mexicanos.</Description>
+    <SatelliteResourceLanguages>es</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Logo.jpg" />
+    <Resource Include="Assets\Logo.png" />
+    <Resource Include="Assets\LogoSplash.png" />
+    <Resource Include="Assets\AppIcon.png" />
+    <None Include="build.number" />
+    <Compile Remove="SimTrade.Tests\**" />
+    <None Remove="SimTrade.Tests\**" />
+    <EmbeddedResource Remove="SimTrade.Tests\**" />
+    <Page Remove="SimTrade.Tests\**" />
+  </ItemGroup>
+
+  <!-- Cada compilación real incrementa el patch (1.0.N). -->
+  <Target Name="BumpBuildNumber"
+          BeforeTargets="GenerateAssemblyInfo;GetAssemblyVersion"
+          Condition="'$(DesignTimeBuild)' != 'true' And '$(MSBuildProjectName)' == 'SimTrade'">
+    <ReadLinesFromFile File="$(BuildNumberFile)" Condition="Exists('$(BuildNumberFile)')">
+      <Output TaskParameter="Lines" PropertyName="_RawBuildNumber" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <_RawBuildNumber Condition="'$(_RawBuildNumber)' == '' Or '$(_RawBuildNumber)' == '*Undefined*'">0</_RawBuildNumber>
+      <BuildNumber>$([MSBuild]::Add($(_RawBuildNumber), 1))</BuildNumber>
+      <Version>$(VersionMajorMinor).$(BuildNumber)</Version>
+      <AssemblyVersion>$(Version).0</AssemblyVersion>
+      <FileVersion>$(Version).0</FileVersion>
+      <InformationalVersion>$(Version)</InformationalVersion>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(BuildNumberFile)" Lines="$(BuildNumber)" Overwrite="true" />
+    <Message Importance="high" Text="SimTrade versión $(Version)" />
+  </Target>
+
+  <!-- Diseño / proyecto temporal WPF: lee el número actual sin incrementar. -->
+  <Target Name="ReadBuildNumber"
+          BeforeTargets="GenerateAssemblyInfo;GetAssemblyVersion"
+          Condition="'$(DesignTimeBuild)' == 'true' Or '$(MSBuildProjectName)' != 'SimTrade'">
+    <ReadLinesFromFile File="$(BuildNumberFile)" Condition="Exists('$(BuildNumberFile)')">
+      <Output TaskParameter="Lines" PropertyName="_RawBuildNumber" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <_RawBuildNumber Condition="'$(_RawBuildNumber)' == '' Or '$(_RawBuildNumber)' == '*Undefined*'">0</_RawBuildNumber>
+      <Version>$(VersionMajorMinor).$(_RawBuildNumber)</Version>
+      <AssemblyVersion>$(Version).0</AssemblyVersion>
+      <FileVersion>$(Version).0</FileVersion>
+      <InformationalVersion>$(Version)</InformationalVersion>
+    </PropertyGroup>
+  </Target>
+
+</Project>

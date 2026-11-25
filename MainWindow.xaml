@@ -1,0 +1,1657 @@
+﻿<Window x:Class="SimTrade.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:SimTrade.Controls"
+        Title="{Binding WindowTitle}"
+        Width="1360"
+        Height="840"
+        MinWidth="1100"
+        MinHeight="700"
+        WindowStartupLocation="CenterScreen"
+        Icon="pack://application:,,,/Assets/AppIcon.png"
+        Background="{StaticResource BgBrush}"
+        Foreground="{StaticResource TextBrush}"
+        FontFamily="Segoe UI"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="36" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Width="{Binding SidebarWidth}"
+                Background="#000000"
+                BorderBrush="{StaticResource LineBrush}"
+                BorderThickness="0,0,1,0"
+                ClipToBounds="True">
+            <DockPanel>
+                <RadioButton DockPanel.Dock="Bottom"
+                             GroupName="Nav"
+                             Style="{StaticResource NavButton}"
+                             Margin="10,0,10,12"
+                             ToolTip="Acerca de SimTrade"
+                             IsChecked="{Binding Page, Converter={StaticResource EnumIs}, ConverterParameter=Acerca, Mode=TwoWay}">
+                    <ctrl:IconLabel Glyph="About" Text="Acerca de SimTrade" ShowText="{Binding IsSidebarExpanded}" />
+                </RadioButton>
+                <StackPanel Margin="10,14,10,0">
+                    <!-- Expandido: logo + "<" a la derecha (estilo SwingTrade) -->
+                    <Grid Margin="0,0,0,4"
+                          Visibility="{Binding IsSidebarExpanded, Converter={StaticResource BoolVis}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Stretch="Uniform"
+                               MaxHeight="40"
+                               Margin="2,2,8,2"
+                               RenderOptions.BitmapScalingMode="HighQuality">
+                            <Image.Source>
+                                <CroppedBitmap Source="pack://application:,,,/Assets/Logo.png" SourceRect="274,434,2204,670" />
+                            </Image.Source>
+                        </Image>
+                        <Button Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Padding="8,4"
+                                MinWidth="28"
+                                MinHeight="28"
+                                Style="{StaticResource SecondaryButton}"
+                                Command="{Binding ToggleSidebarCommand}"
+                                ToolTip="{Binding SidebarToggleToolTip}"
+                                Content="{Binding SidebarToggleText}"
+                                FontSize="14"
+                                FontWeight="SemiBold" />
+                    </Grid>
+                    <!-- Colapsado: solo ">" (sin logo) -->
+                    <Button Margin="0,0,0,4"
+                            HorizontalAlignment="Center"
+                            Padding="8,4"
+                            MinWidth="28"
+                            MinHeight="28"
+                            Style="{StaticResource SecondaryButton}"
+                            Command="{Binding ToggleSidebarCommand}"
+                            ToolTip="{Binding SidebarToggleToolTip}"
+                            Content="{Binding SidebarToggleText}"
+                            FontSize="14"
+                            FontWeight="SemiBold"
+                            Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource BoolVis}}" />
+                    <RadioButton GroupName="Nav" Style="{StaticResource NavButton}" Margin="0,10,0,0"
+                                 ToolTip="Portafolio"
+                                 IsChecked="{Binding Page, Converter={StaticResource EnumIs}, ConverterParameter=Portafolio, Mode=TwoWay}">
+                        <ctrl:IconLabel Glyph="Portfolio" Text="Portafolio" ShowText="{Binding IsSidebarExpanded}" />
+                    </RadioButton>
+                    <RadioButton GroupName="Nav" Style="{StaticResource NavButton}"
+                                 ToolTip="Operar"
+                                 IsChecked="{Binding Page, Converter={StaticResource EnumIs}, ConverterParameter=Operar, Mode=TwoWay}">
+                        <ctrl:IconLabel Glyph="Trade" Text="Operar" ShowText="{Binding IsSidebarExpanded}" />
+                    </RadioButton>
+                    <RadioButton GroupName="Nav" Style="{StaticResource NavButton}"
+                                 ToolTip="Rendimiento Portafolios"
+                                 IsChecked="{Binding Page, Converter={StaticResource EnumIs}, ConverterParameter=Rendimiento, Mode=TwoWay}">
+                        <ctrl:IconLabel Glyph="Performance" Text="Rendimiento Portafolios" ShowText="{Binding IsSidebarExpanded}" />
+                    </RadioButton>
+                    <RadioButton GroupName="Nav" Style="{StaticResource NavButton}"
+                                 ToolTip="Análisis"
+                                 IsChecked="{Binding Page, Converter={StaticResource EnumIs}, ConverterParameter=Analisis, Mode=TwoWay}">
+                        <ctrl:IconLabel Glyph="Chart" Text="Análisis" ShowText="{Binding IsSidebarExpanded}" />
+                    </RadioButton>
+                    <RadioButton GroupName="Nav" Style="{StaticResource NavButton}"
+                                 ToolTip="Historial"
+                                 IsChecked="{Binding Page, Converter={StaticResource EnumIs}, ConverterParameter=Historial, Mode=TwoWay}">
+                        <ctrl:IconLabel Glyph="History" Text="Historial" ShowText="{Binding IsSidebarExpanded}" />
+                    </RadioButton>
+                    <RadioButton GroupName="Nav" Style="{StaticResource NavButton}"
+                                 ToolTip="Cuentas"
+                                 IsChecked="{Binding Page, Converter={StaticResource EnumIs}, ConverterParameter=Cuentas, Mode=TwoWay}">
+                        <ctrl:IconLabel Glyph="Accounts" Text="Cuentas" ShowText="{Binding IsSidebarExpanded}" />
+                    </RadioButton>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="28,22,28,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Margin="0,0,0,16" Visibility="{Binding ShowWorkspaceHeader, Converter={StaticResource BoolVis}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Cuenta" Style="{StaticResource SectionLabel}" />
+                    <ComboBox Width="360" HorizontalAlignment="Left" Margin="0,6,0,0"
+                              ItemsSource="{Binding Accounts}"
+                              SelectedItem="{Binding ActiveAccount}"
+                              IsEnabled="{Binding HasAccounts}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <ctrl:AccountIconBadge Icon="{Binding Icon}" Size="22" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding Name}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                    <Border Padding="10,6"
+                            Margin="0,0,0,8"
+                            Background="#1A2A1A"
+                            BorderBrush="#2F6B3A"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Visibility="{Binding ShowUpdateBanner, Converter={StaticResource BoolVis}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding UpdateBannerText}"
+                                       VerticalAlignment="Center"
+                                       Foreground="#B7F7C8"
+                                       FontSize="12"
+                                       Margin="0,0,10,0" />
+                            <Button Style="{StaticResource SmallSecondary}"
+                                    Command="{Binding InstallUpdateCommand}"
+                                    Content="Actualizar"
+                                    Margin="0,0,6,0" />
+                            <Button Style="{StaticResource GhostButton}"
+                                    Command="{Binding DismissUpdateBannerCommand}"
+                                    Content="✕"
+                                    MinWidth="28"
+                                    Padding="4,2" />
+                        </StackPanel>
+                    </Border>
+                    <TextBlock Text="{Binding FxText}" Foreground="{StaticResource TextBrush}" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                    <TextBlock Text="{Binding UpdatedText}" Foreground="{StaticResource FaintBrush}" FontSize="12" HorizontalAlignment="Right" Margin="0,2,0,0" />
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid Visibility="{Binding Page, Converter={StaticResource EnumVis}, ConverterParameter=Portafolio}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Portafolio" Style="{StaticResource PageTitle}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Margin="0,0,8,0" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ShowIntradayChartCommand}" IsEnabled="{Binding HasChartSymbol}">
+                                <ctrl:IconLabel Glyph="Intraday" Text="Gráfica intradía" />
+                            </Button>
+                            <Button Margin="0,0,8,0" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ShowDailyChartCommand}" IsEnabled="{Binding HasChartSymbol}">
+                                <ctrl:IconLabel Glyph="Chart" Text="Gráfica" />
+                            </Button>
+                            <Button Margin="0,0,8,0" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ShowPositionDayRangeCommand}" IsEnabled="{Binding HasChartSymbol}">
+                                <ctrl:IconLabel Glyph="Intraday" Text="Rango intradía" />
+                            </Button>
+                            <Button Margin="0,0,8,0" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ShowPositionYearRangeCommand}" IsEnabled="{Binding HasChartSymbol}">
+                                <ctrl:IconLabel Glyph="Chart" Text="Rango 52 semanas" />
+                            </Button>
+                            <Button Margin="0,0,8,0" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding OpenCompositionCommand}" IsEnabled="{Binding HasPositions}">
+                                <ctrl:IconLabel Glyph="Pie" Text="Composición" />
+                            </Button>
+                            <Button Margin="0,0,8,0" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ShowActiveEquityChartCommand}" IsEnabled="{Binding HasActive}">
+                                <ctrl:IconLabel Glyph="Chart" Text="Evolución" />
+                            </Button>
+                            <Grid>
+                                <Button x:Name="PortfolioColumnsButton"
+                                        Style="{StaticResource SecondaryButton}"
+                                        Command="{Binding TogglePortfolioColumnsCommand}"
+                                        IsEnabled="{Binding HasPositions}">
+                                    <ctrl:IconLabel Glyph="Portfolio" Text="Columnas" />
+                                </Button>
+                                <Popup x:Name="PortfolioColumnsPopup"
+                                       PlacementTarget="{Binding ElementName=PortfolioColumnsButton}"
+                                       Placement="Bottom"
+                                       HorizontalOffset="-280"
+                                       VerticalOffset="8"
+                                       StaysOpen="True"
+                                       AllowsTransparency="True"
+                                       PopupAnimation="Fade"
+                                       IsOpen="{Binding DataContext.IsChoosingPortfolioColumns, ElementName=PortfolioColumnsButton, Mode=TwoWay}"
+                                       DataContext="{Binding DataContext, ElementName=PortfolioColumnsButton}">
+                                    <Border Width="440"
+                                            Height="560"
+                                            MinWidth="360"
+                                            MinHeight="320"
+                                            Background="{StaticResource SurfaceRaisedBrush}"
+                                            BorderBrush="{StaticResource LineBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="12"
+                                            Padding="14,14,8,8">
+                                        <Grid>
+                                            <DockPanel Margin="0,0,6,10">
+                                                <Grid DockPanel.Dock="Top"
+                                                      Cursor="SizeAll"
+                                                      ToolTip="Arrastra para mover este cuadro"
+                                                      Margin="0,0,0,8">
+                                                    <Thumb DragDelta="ColumnPopupThumb_DragDelta"
+                                                           DragCompleted="ColumnPopupThumb_DragCompleted">
+                                                        <Thumb.Template>
+                                                            <ControlTemplate TargetType="Thumb">
+                                                                <Border Background="Transparent" />
+                                                            </ControlTemplate>
+                                                        </Thumb.Template>
+                                                    </Thumb>
+                                                    <TextBlock Text="Columnas del portafolio"
+                                                               FontSize="16"
+                                                               FontWeight="SemiBold"
+                                                               VerticalAlignment="Center"
+                                                               Margin="0,0,36,0"
+                                                               IsHitTestVisible="False" />
+                                                    <Button Width="28"
+                                                            Height="28"
+                                                            MinHeight="28"
+                                                            Padding="0"
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Center"
+                                                            Style="{StaticResource GhostButton}"
+                                                            ToolTip="Cerrar"
+                                                            Command="{Binding TogglePortfolioColumnsCommand}"
+                                                            Content="✕" />
+                                                </Grid>
+                                                <TextBlock DockPanel.Dock="Top"
+                                                           Margin="0,0,0,10"
+                                                           FontSize="12"
+                                                           Foreground="{StaticResource MutedBrush}"
+                                                           TextWrapping="Wrap"
+                                                           Text="Marca las columnas visibles. Usa las flechas para el orden. Arrastra el título para mover este cuadro y la esquina inferior derecha para cambiar su tamaño. El nombre y el color se guardan automáticamente." />
+                                                <Button DockPanel.Dock="Bottom"
+                                                        Style="{StaticResource SecondaryButton}"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="0,10,0,0"
+                                                        Command="{Binding ResetPortfolioColumnsCommand}">
+                                                    <ctrl:IconLabel Glyph="Check" Text="Restaurar" />
+                                                </Button>
+                                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                                    <ItemsControl ItemsSource="{Binding PortfolioColumnOptions}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Border Margin="0,0,0,10" Padding="10" Background="{StaticResource SurfaceBrush}" CornerRadius="8">
+                                                                    <StackPanel>
+                                                                        <DockPanel>
+                                                                            <CheckBox IsChecked="{Binding IsVisible, Mode=TwoWay}"
+                                                                                      VerticalAlignment="Center"
+                                                                                      Content="{Binding Title}"
+                                                                                      FontWeight="SemiBold" />
+                                                                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                                                                                <Button Style="{StaticResource GhostButton}" MinWidth="28" Padding="4,2"
+                                                                                        Command="{Binding DataContext.MovePortfolioColumnUpCommand, ElementName=PortfolioColumnsButton}"
+                                                                                        CommandParameter="{Binding}" Content="↑" ToolTip="Subir" />
+                                                                                <Button Style="{StaticResource GhostButton}" MinWidth="28" Padding="4,2"
+                                                                                        Command="{Binding DataContext.MovePortfolioColumnDownCommand, ElementName=PortfolioColumnsButton}"
+                                                                                        CommandParameter="{Binding}" Content="↓" ToolTip="Bajar" />
+                                                                            </StackPanel>
+                                                                        </DockPanel>
+                                                                        <TextBlock Text="{Binding Hint}" Margin="0,4,0,6"
+                                                                                   Foreground="{StaticResource FaintBrush}" FontSize="11" TextWrapping="Wrap" />
+                                                                        <TextBox Text="{Binding DisplayTitle, UpdateSourceTrigger=LostFocus}"
+                                                                                 MaxLength="40" Margin="0,0,0,8" />
+                                                                        <ItemsControl ItemsSource="{Binding ColorChoices}">
+                                                                            <ItemsControl.ItemsPanel>
+                                                                                <ItemsPanelTemplate>
+                                                                                    <WrapPanel />
+                                                                                </ItemsPanelTemplate>
+                                                                            </ItemsControl.ItemsPanel>
+                                                                            <ItemsControl.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Button Style="{StaticResource ColumnSwatch}"
+                                                                                            ToolTip="{Binding Name}"
+                                                                                            Click="PortfolioColumnColor_Click" />
+                                                                                </DataTemplate>
+                                                                            </ItemsControl.ItemTemplate>
+                                                                        </ItemsControl>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                            </DockPanel>
+                                            <Thumb Style="{StaticResource PopupResizeThumb}"
+                                                   DragDelta="ColumnPopupResize_DragDelta" />
+                                        </Grid>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                    <UniformGrid Grid.Row="1" Columns="5" Margin="0,16,0,16">
+                        <Border Style="{StaticResource Card}" Margin="0,0,8,0">
+                            <StackPanel>
+                                <TextBlock Text="Efectivo disponible" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding CashText}" Style="{StaticResource MetricValue}" />
+                                <TextBlock Text="{Binding ReservedText}" Margin="0,6,0,0" Foreground="{StaticResource TextBrush}" FontSize="12" TextWrapping="Wrap"
+                                           Visibility="{Binding ShowReserved, Converter={StaticResource BoolVis}}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="4,0">
+                            <StackPanel>
+                                <TextBlock Text="Valor de mercado" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding MarketValueText}" Style="{StaticResource MetricValue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="4,0">
+                            <StackPanel>
+                                <TextBlock Text="Patrimonio" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding EquityText}" Style="{StaticResource MetricValue}" />
+                                <TextBlock Text="{Binding EquityBreakdownText}" Margin="0,4,0,0"
+                                           Foreground="{StaticResource FaintBrush}" FontSize="11" TextWrapping="Wrap" />
+                                <TextBlock Margin="0,4,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap">
+                                    <Run Text="Abierto " />
+                                    <Run Text="{Binding OpenPnlText, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="4,0">
+                            <StackPanel>
+                                <TextBlock Text="Capital invertido" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding InvestedText}" Style="{StaticResource MetricValue}" />
+                                <TextBlock Text="Inicial + aportaciones − retiros" Margin="0,4,0,0"
+                                           Foreground="{StaticResource FaintBrush}" FontSize="11" TextWrapping="Wrap" />
+                                <TextBlock Margin="0,4,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap">
+                                    <Run Text="Realizado " />
+                                    <Run Text="{Binding RealizedPnlText, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="8,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Resultado vs capital" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding ReturnText}" Style="{StaticResource ReturnText}" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding ReturnSinceText}" Margin="0,6,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding AnnualizedText}" Margin="0,2,0,0" FontSize="13" FontWeight="SemiBold" Style="{StaticResource ReturnText}" TextWrapping="Wrap"
+                                           Visibility="{Binding ShowAnnualized, Converter={StaticResource BoolVis}}" />
+                                <TextBlock Text="Incluye aportaciones y retiros. El anualizado aparece al cumplirse un día." Margin="0,4,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap"
+                                           Visibility="{Binding ShowReturnHint, Converter={StaticResource BoolVis}}" />
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+
+                    <Grid Grid.Row="2">
+                        <Border Style="{StaticResource Card}" VerticalAlignment="Top" Visibility="{Binding ShowNoAccount, Converter={StaticResource BoolVis}}">
+                            <StackPanel>
+                                <TextBlock Text="Todavía no hay una cuenta activa" FontSize="18" FontWeight="SemiBold" />
+                                <TextBlock Text="Crea una cuenta para simular compras. El efectivo inicial sugerido es 1,000,000.00 MXN."
+                                           Margin="0,8,0,16" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                                <Button Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Command="{Binding ShowAccountsCommand}">
+                                    <ctrl:IconLabel Glyph="AddUser" Text="Crear cuenta" />
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" VerticalAlignment="Top" Visibility="{Binding ShowEmptyPortfolio, Converter={StaticResource BoolVis}}">
+                            <StackPanel>
+                                <TextBlock Text="Esta cuenta todavía no tiene posiciones" FontSize="18" FontWeight="SemiBold" />
+                                <TextBlock Text="Cuando compres una acción o un ETF, aquí verás la cantidad, el costo promedio y el precio de mercado en pesos."
+                                           Margin="0,8,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                                                <DataGrid x:Name="PositionsGrid"
+                                  ItemsSource="{Binding Positions}"
+                                  SelectedItem="{Binding SelectedPosition, Mode=TwoWay}"
+                                  FrozenColumnCount="2"
+                                  CanUserSortColumns="True"
+                                  CanUserReorderColumns="False"
+                                  AutoGenerateColumns="False"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                  Visibility="{Binding HasPositions, Converter={StaticResource BoolVis}}" />                    </Grid>
+                </Grid>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                              Visibility="{Binding Page, Converter={StaticResource EnumVis}, ConverterParameter=Operar}">
+                    <Grid Margin="0,0,8,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Operar" Style="{StaticResource PageTitle}" />
+                        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,16,0,0" Visibility="{Binding ShowNoAccount, Converter={StaticResource BoolVis}}">
+                            <StackPanel>
+                                <TextBlock Text="Elige o crea una cuenta antes de operar" FontSize="18" FontWeight="SemiBold" />
+                                <Button Margin="0,14,0,0" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Command="{Binding ShowAccountsCommand}">
+                                    <ctrl:IconLabel Glyph="Accounts" Text="Ir a cuentas" />
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                        <Grid Grid.Row="1" Margin="0,16,0,8" Visibility="{Binding HasActive, Converter={StaticResource BoolVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="340" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,18,0">
+                                <Border Style="{StaticResource Card}" Margin="0,0,0,14" Padding="14,12">
+                                    <StackPanel>
+                                        <DockPanel LastChildFill="True">
+                                            <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center"
+                                                       Foreground="{StaticResource TextBrush}" FontWeight="SemiBold" FontSize="13"
+                                                       Visibility="{Binding HasPending, Converter={StaticResource BoolVis}}">
+                                                <Run Text="{Binding PendingCount, Mode=OneWay}" />
+                                                <Run Text=" en cola" />
+                                            </TextBlock>
+                                            <TextBlock Text="Cola de órdenes" FontSize="16" FontWeight="SemiBold" />
+                                        </DockPanel>
+                                        <TextBlock Text="Órdenes de mercado al abrir, limitadas, stop y take profit. En Bolsa las limitadas no ejecutadas se cancelan al cierre; stop/take profit y las de Crypto permanecen hasta ejecutarse o cancelarlas."
+                                                   Margin="0,4,0,10" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="12" />
+                                        <TextBlock Text="No hay órdenes pendientes."
+                                                   Foreground="{StaticResource FaintBrush}" FontSize="13"
+                                                   Visibility="{Binding HasPending, Converter={StaticResource InverseBoolVis}}" />
+                                        <ItemsControl ItemsSource="{Binding PendingOrders}"
+                                                      Visibility="{Binding HasPending, Converter={StaticResource BoolVis}}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Margin="0,0,0,8" Padding="10,8" Background="{StaticResource SurfaceRaisedBrush}" CornerRadius="8">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel>
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <ctrl:LogoBadge Symbol="{Binding Symbol}" Size="22" VerticalAlignment="Center" />
+                                                                    <TextBlock Text="{Binding Symbol}" Margin="8,0,0,0" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                                                    <TextBlock Text="{Binding SideText}" Margin="10,0,0,0" VerticalAlignment="Center" Style="{StaticResource SideText}" />
+                                                                    <TextBlock Text="{Binding TypeText}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                                               Foreground="{StaticResource TextBrush}" FontSize="12" FontWeight="SemiBold" />
+                                                                </StackPanel>
+                                                                <TextBlock Text="{Binding CompanyName}" Margin="0,2,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                                                <TextBlock Margin="0,4,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap">
+                                                                    <Run Text="{Binding QuantityText, Mode=OneWay}" />
+                                                                    <Run Text=" · " />
+                                                                    <Run Text="{Binding LimitText, Mode=OneWay}" />
+                                                                    <Run Text=" · " />
+                                                                    <Run Text="{Binding HoldText, Mode=OneWay}" />
+                                                                    <Run Text=" · " />
+                                                                    <Run Text="{Binding WhenText, Mode=OneWay}" />
+                                                                    <Run Text=" · " />
+                                                                    <Run Text="{Binding ExpiresText, Mode=OneWay}" />
+                                                                </TextBlock>
+                                                            </StackPanel>
+                                                            <Button Grid.Column="1" Style="{StaticResource DangerButton}" VerticalAlignment="Center" Margin="8,0,0,0"
+                                                                    Padding="10,6" MinHeight="32"
+                                                                    Command="{Binding DataContext.CancelPendingCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                    CommandParameter="{Binding}">
+                                                                <ctrl:IconLabel Glyph="Trash" Text="Cancelar" Size="14" />
+                                                            </Button>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                                <TextBlock Text="Símbolo" Style="{StaticResource SectionLabel}" />
+                                <Grid Margin="0,6,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="SymbolBox" Text="{Binding SymbolText, UpdateSourceTrigger=PropertyChanged}"
+                                             PreviewKeyDown="SymbolBox_PreviewKeyDown"
+                                             ToolTip="Escribe el símbolo y presiona Enter. Ejemplo: WALMEX o AAPL." />
+                                    <Button Grid.Column="1" Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
+                                            Command="{Binding LookupSymbolCommand}" IsEnabled="{Binding IsNotBusy}">
+                                        <ctrl:IconLabel Glyph="Search" Text="Buscar" />
+                                    </Button>
+                                </Grid>
+                                <WrapPanel Margin="0,8,0,0">
+                                    <Button Margin="0,0,8,8" Style="{StaticResource SecondaryButton}"
+                                            Command="{Binding ShowQuoteIntradayChartCommand}" IsEnabled="{Binding HasQuoteChart}">
+                                        <ctrl:IconLabel Glyph="Intraday" Text="Gráfica intradía" />
+                                    </Button>
+                                    <Button Margin="0,0,8,8" Style="{StaticResource SecondaryButton}"
+                                            Command="{Binding ShowQuoteDailyChartCommand}" IsEnabled="{Binding HasQuoteChart}">
+                                        <ctrl:IconLabel Glyph="Chart" Text="Gráfica" />
+                                    </Button>
+                                    <Button Margin="0,0,8,8" Style="{StaticResource SecondaryButton}"
+                                            Command="{Binding ShowQuoteDayRangeCommand}" IsEnabled="{Binding HasQuoteChart}">
+                                        <ctrl:IconLabel Glyph="Intraday" Text="Rango intradía" />
+                                    </Button>
+                                    <Button Margin="0,0,8,8" Style="{StaticResource SecondaryButton}"
+                                            Command="{Binding ShowQuoteYearRangeCommand}" IsEnabled="{Binding HasQuoteChart}">
+                                        <ctrl:IconLabel Glyph="Chart" Text="Rango 52 semanas" />
+                                    </Button>
+                                </WrapPanel>
+                                <ListBox ItemsSource="{Binding Suggestions}"
+                                         SelectedItem="{Binding ChosenSuggestion}"
+                                         MaxHeight="220"
+                                         Margin="0,8,0,0"
+                                         Visibility="{Binding ShowSuggestions, Converter={StaticResource BoolVis}}"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="108" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <ctrl:LogoBadge Symbol="{Binding Symbol}" Size="22" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{Binding Symbol}" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="2" Text="{Binding Name}" Foreground="{StaticResource MutedBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="3" Text="{Binding Kind}" Margin="12,0,0,0" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <TextBlock Text="{Binding MarketLine}" Margin="0,14,0,0" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding SessionText}" Margin="0,4,0,0" Foreground="{StaticResource TextBrush}" FontWeight="SemiBold"
+                                           Visibility="{Binding ShowSession, Converter={StaticResource BoolVis}}" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding OriginLine}" Margin="0,4,0,0" Foreground="{StaticResource TextBrush}"
+                                           Visibility="{Binding ShowFx, Converter={StaticResource BoolVis}}" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding FxLine}" Margin="0,2,0,0" Foreground="{StaticResource MutedBrush}"
+                                           Visibility="{Binding ShowFx, Converter={StaticResource BoolVis}}" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding PositionHint}" Margin="0,8,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+
+                                <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
+                                    <RadioButton GroupName="Lado" Style="{StaticResource SegmentButton}" Margin="0,0,8,0"
+                                                 IsChecked="{Binding IsBuy}">
+                                        <ctrl:IconLabel Glyph="Buy" Text="Compra" />
+                                    </RadioButton>
+                                    <RadioButton GroupName="Lado" Style="{StaticResource SegmentButton}"
+                                                 IsChecked="{Binding IsSell}">
+                                        <ctrl:IconLabel Glyph="Sell" Text="Venta" />
+                                    </RadioButton>
+                                </StackPanel>
+
+                                <Border Margin="0,14,0,0" Style="{StaticResource Card}" Padding="12"
+                                        Visibility="{Binding ShowSellPositions, Converter={StaticResource BoolVis}}">
+                                    <StackPanel>
+                                        <TextBlock Text="Tus posiciones" FontSize="15" FontWeight="SemiBold" />
+                                        <TextBlock Text="Elige cuál quieres vender. Se cargará el símbolo y la cantidad disponible."
+                                                   Margin="0,4,0,10"
+                                                   Foreground="{StaticResource MutedBrush}"
+                                                   FontSize="12"
+                                                   TextWrapping="Wrap" />
+                                        <ItemsControl ItemsSource="{Binding Positions}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="0,0,0,8"
+                                                            HorizontalContentAlignment="Stretch"
+                                                            Style="{StaticResource SecondaryButton}"
+                                                            Command="{Binding DataContext.PrepareSellCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}">
+                                                        <Grid Margin="2,2">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <ctrl:LogoBadge Symbol="{Binding Symbol}" Size="28" VerticalAlignment="Center" />
+                                                            <StackPanel Grid.Column="1" Margin="10,0,12,0" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding Symbol}" FontWeight="SemiBold" />
+                                                                <TextBlock Text="{Binding CompanyName}"
+                                                                           Foreground="{StaticResource MutedBrush}"
+                                                                           FontSize="12"
+                                                                           TextTrimming="CharacterEllipsis" />
+                                                                <TextBlock Margin="0,2,0,0" FontSize="12" Foreground="{StaticResource MutedBrush}">
+                                                                    <Run Text="Cant. " />
+                                                                    <Run Text="{Binding QuantityText, Mode=OneWay}" />
+                                                                    <Run Text=" · Prom. " />
+                                                                    <Run Text="{Binding AverageText, Mode=OneWay}" />
+                                                                </TextBlock>
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                                <TextBlock Text="{Binding MarketValueText}" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                                                                <TextBlock Text="{Binding UnrealizedText}"
+                                                                           Style="{StaticResource PnlText}"
+                                                                           FontSize="12"
+                                                                           HorizontalAlignment="Right"
+                                                                           Margin="0" />
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                                <Border Margin="0,14,0,0" Style="{StaticResource Card}" Padding="12"
+                                        Visibility="{Binding ShowNoSellPositions, Converter={StaticResource BoolVis}}">
+                                    <TextBlock Text="No hay posiciones abiertas para vender. Cambia a Compra si quieres adquirir un activo."
+                                               Foreground="{StaticResource MutedBrush}"
+                                               TextWrapping="Wrap" />
+                                </Border>
+
+                                <WrapPanel Margin="0,12,0,0">
+                                    <RadioButton GroupName="TipoOrden" Style="{StaticResource SegmentButton}" Margin="0,0,8,8"
+                                                 IsChecked="{Binding IsMarketOrder}">
+                                        <ctrl:IconLabel Glyph="Market" Text="Mercado" />
+                                    </RadioButton>
+                                    <RadioButton GroupName="TipoOrden" Style="{StaticResource SegmentButton}" Margin="0,0,8,8"
+                                                 IsChecked="{Binding IsLimitOrder}">
+                                        <ctrl:IconLabel Glyph="Check" Text="Limitada" />
+                                    </RadioButton>
+                                    <RadioButton GroupName="TipoOrden" Style="{StaticResource SegmentButton}" Margin="0,0,8,8"
+                                                 IsChecked="{Binding IsStopOrder}">
+                                        <ctrl:IconLabel Glyph="Sell" Text="Stop" />
+                                    </RadioButton>
+                                    <RadioButton GroupName="TipoOrden" Style="{StaticResource SegmentButton}" Margin="0,0,8,8"
+                                                 IsChecked="{Binding IsTakeProfitOrder}">
+                                        <ctrl:IconLabel Glyph="Buy" Text="Take profit" />
+                                    </RadioButton>
+                                </WrapPanel>
+
+                                <StackPanel Margin="0,4,0,0"
+                                            Visibility="{Binding NeedsTriggerPrice, Converter={StaticResource BoolVis}}">
+                                    <TextBlock Text="Vigencia (días)" Style="{StaticResource SectionLabel}" />
+                                    <ComboBox Margin="0,6,0,0"
+                                              Width="120"
+                                              HorizontalAlignment="Left"
+                                              ItemsSource="{Binding ValidityDayOptions}"
+                                              SelectedItem="{Binding PendingValidityDays}" />
+                                    <TextBlock Margin="0,6,0,0"
+                                               FontSize="12"
+                                               Foreground="{StaticResource FaintBrush}"
+                                               TextWrapping="Wrap"
+                                               Text="De 1 a 30 días. Si no se ejecuta en ese plazo, la orden se cancela sola y se libera el efectivo o la cantidad apartada." />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                    <RadioButton GroupName="Sizing" Style="{StaticResource SegmentButton}" Margin="0,0,8,0"
+                                                 IsChecked="{Binding TradeByQuantity}">
+                                        <ctrl:IconLabel Glyph="Trade" Text="Por cantidad" />
+                                    </RadioButton>
+                                    <RadioButton GroupName="Sizing" Style="{StaticResource SegmentButton}"
+                                                 IsChecked="{Binding TradeByAmount}">
+                                        <ctrl:IconLabel Glyph="Buy" Text="Por monto" />
+                                    </RadioButton>
+                                </StackPanel>
+
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Margin="0,0,8,0">
+                                        <TextBlock Text="{Binding QuantityFieldLabel}" Style="{StaticResource SectionLabel}"
+                                                   Visibility="{Binding TradeByQuantity, Converter={StaticResource BoolVis}}" />
+                                        <TextBlock Text="{Binding AmountFieldLabel}" Style="{StaticResource SectionLabel}"
+                                                   Visibility="{Binding TradeByAmount, Converter={StaticResource BoolVis}}" />
+                                        <TextBox Margin="0,6,0,0"
+                                                 Text="{Binding QuantityText, UpdateSourceTrigger=PropertyChanged}"
+                                                 Visibility="{Binding TradeByQuantity, Converter={StaticResource BoolVis}}" />
+                                        <TextBox Margin="0,6,0,0"
+                                                 Text="{Binding AmountText, UpdateSourceTrigger=PropertyChanged}"
+                                                 Visibility="{Binding TradeByAmount, Converter={StaticResource BoolVis}}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                        <TextBlock Text="{Binding PriceFieldLabel}" Style="{StaticResource SectionLabel}" />
+                                        <TextBox Margin="0,6,0,0" Text="{Binding PriceText, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock Text="{Binding SizingHint}" Margin="0,6,0,0"
+                                           Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding AmountFieldHint}" Margin="0,2,0,0"
+                                           Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap"
+                                           Visibility="{Binding TradeByAmount, Converter={StaticResource BoolVis}}" />
+                                <WrapPanel Margin="0,10,0,0">
+                                    <Button Margin="0,0,8,8" Style="{StaticResource SecondaryButton}" Command="{Binding UseMarketPriceCommand}">
+                                        <ctrl:IconLabel Glyph="Market" Text="Usar precio de mercado" />
+                                    </Button>
+                                    <Button Margin="0,0,8,8" Style="{StaticResource SecondaryButton}" Command="{Binding UseDayLowPriceCommand}">
+                                        <ctrl:IconLabel Glyph="Sell" Text="Usar precio mínimo del día" />
+                                    </Button>
+                                    <Button Margin="0,0,8,8" Style="{StaticResource SecondaryButton}" Command="{Binding UseDayHighPriceCommand}">
+                                        <ctrl:IconLabel Glyph="Buy" Text="Usar precio máximo del día" />
+                                    </Button>
+                                    <Button Margin="0,0,8,8" Style="{StaticResource SecondaryButton}" Command="{Binding UseAllSharesCommand}">
+                                        <ctrl:IconLabel Glyph="SellAll" Text="Vender todo" />
+                                    </Button>
+                                </WrapPanel>
+                                <TextBlock Text="{Binding PriceFieldHint}"
+                                           Margin="0,12,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <Border Grid.Column="1" Style="{StaticResource Card}" VerticalAlignment="Top">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding PreviewCaption}" FontSize="18" FontWeight="SemiBold" />
+                                    <TextBlock Text="Captura cantidad y precio para ver el cálculo."
+                                               Margin="0,12,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap"
+                                               Visibility="{Binding PreviewVisible, Converter={StaticResource InverseBoolVis}}" />
+                                    <StackPanel Margin="0,14,0,0" Visibility="{Binding PreviewVisible, Converter={StaticResource BoolVis}}">
+                                        <TextBlock Text="Efectivo disponible" Style="{StaticResource SectionLabel}" />
+                                        <TextBlock Text="{Binding PreviewCashAvailableText}" FontSize="16" Margin="0,2,0,10" />
+                                        <TextBlock Text="Importe" Style="{StaticResource SectionLabel}" />
+                                        <TextBlock Text="{Binding PreviewGrossText}" FontSize="16" Margin="0,2,0,10" />
+                                        <TextBlock Text="{Binding PreviewCommissionCaption}" Style="{StaticResource SectionLabel}" />
+                                        <TextBlock Text="{Binding PreviewCommissionText}" FontSize="16" Margin="0,2,0,10" />
+                                        <TextBlock Text="{Binding PreviewTotalCaption}" Style="{StaticResource SectionLabel}" />
+                                        <TextBlock Text="{Binding PreviewTotalText}" FontSize="22" FontWeight="SemiBold" Margin="0,2,0,10" />
+                                        <TextBlock Text="Efectivo después" Style="{StaticResource SectionLabel}" />
+                                        <TextBlock Text="{Binding PreviewCashAfterText}" Style="{StaticResource CashAfterText}" />
+                                        <TextBlock Text="Costo promedio resultante" Style="{StaticResource SectionLabel}" />
+                                        <TextBlock Text="{Binding PreviewAverageText}" FontSize="16" Margin="0,2,0,10" />
+                                        <TextBlock Text="Posición resultante" Style="{StaticResource SectionLabel}" />
+                                        <TextBlock Text="{Binding PreviewQuantityText}" FontSize="16" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding PreviewWarning}" Margin="0,14,0,0" Foreground="{StaticResource DownBrush}" TextWrapping="Wrap"
+                                               Visibility="{Binding HasPreviewWarning, Converter={StaticResource BoolVis}}" />
+                                    <Button Margin="0,18,0,0" Style="{StaticResource PrimaryButton}"
+                                            Command="{Binding ExecuteTradeCommand}">
+                                        <ctrl:IconLabel Glyph="Check" Text="{Binding TradeButtonText}" />
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+
+                <Grid Visibility="{Binding Page, Converter={StaticResource EnumVis}, ConverterParameter=Rendimiento}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Rendimiento Portafolios" Style="{StaticResource PageTitle}" />
+                            <TextBlock Text="Resumen de efectivo, valor de mercado, patrimonio y resultado de cada cuenta. El resultado usa el capital invertido (inicial + aportaciones - retiros)."
+                                       Margin="0,6,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding UpdatedText}" Margin="0,4,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"
+                                    Command="{Binding ShowAllEquityChartsCommand}"
+                                    IsEnabled="{Binding HasPerformance}">
+                                <ctrl:IconLabel Glyph="Performance" Text="Comparar todas" />
+                            </Button>
+                            <Button Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ShowActiveEquityChartCommand}" IsEnabled="{Binding HasActive}">
+                                <ctrl:IconLabel Glyph="Chart" Text="Evolución" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                    <UniformGrid Grid.Row="1" Columns="5" Margin="0,16,0,0"
+                                 Visibility="{Binding HasPerformance, Converter={StaticResource BoolVis}}">
+                        <Border Style="{StaticResource Card}" Margin="0,0,8,0">
+                            <StackPanel>
+                                <TextBlock Text="Total efectivo" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding ConsolidatedCashText}" Style="{StaticResource MetricValue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="4,0">
+                            <StackPanel>
+                                <TextBlock Text="Total mercado" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding ConsolidatedMarketText}" Style="{StaticResource MetricValue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="4,0">
+                            <StackPanel>
+                                <TextBlock Text="Patrimonio total" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding ConsolidatedEquityText}" Style="{StaticResource MetricValue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="4,0">
+                            <StackPanel>
+                                <TextBlock Text="Capital invertido" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding ConsolidatedInvestedText}" Style="{StaticResource MetricValue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="8,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Resultado consolidado" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding ConsolidatedReturnText}" Style="{StaticResource ConsolidatedReturnText}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+                    <Grid Grid.Row="2" Margin="0,16,0,0">
+                        <Border Style="{StaticResource Card}" VerticalAlignment="Top" Visibility="{Binding ShowEmptyPerformance, Converter={StaticResource BoolVis}}">
+                            <StackPanel>
+                                <TextBlock Text="Todavía no hay portafolios" FontSize="18" FontWeight="SemiBold" />
+                                <TextBlock Text="Crea una cuenta para ver aquí su rendimiento."
+                                           Margin="0,8,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                        <DataGrid ItemsSource="{Binding PerformanceSummaries}"
+                                  CanUserSortColumns="True"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  Visibility="{Binding HasPerformance, Converter={StaticResource BoolVis}}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="Portafolio" SortMemberPath="Name" Width="SizeToCells" MinWidth="160">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="8,0" VerticalAlignment="Center"
+                                                        ToolTip="{Binding Notes}">
+                                                <ctrl:AccountIconBadge Icon="{Binding Icon}" Size="24" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding Name}" Margin="8,0,0,0" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="" Width="72" MinWidth="72" CanUserSort="False">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Margin="0,0,4,0" Background="{StaticResource AccentSoftBrush}" CornerRadius="6" Padding="8,2" VerticalAlignment="Center"
+                                                    Visibility="{Binding IsActive, Converter={StaticResource BoolVis}}">
+                                                <TextBlock Text="En uso" Foreground="{StaticResource TextBrush}" FontSize="11" FontWeight="SemiBold" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="" Width="120" CanUserSort="False">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Style="{StaticResource SmallSecondary}" Margin="6,0"
+                                                    Command="{Binding DataContext.ShowEquityChartCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding}">
+                                                <ctrl:IconLabel Glyph="Chart" Text="Evolución" Size="14" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Tipo" Binding="{Binding MarketKindText}" SortMemberPath="MarketKindText" Width="80">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Margin" Value="8,0" />
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Activos" Binding="{Binding AssetCount}" SortMemberPath="AssetCount" Width="80">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Margin" Value="8,0" />
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Efectivo" Binding="{Binding CashText}" Width="120">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Margin" Value="8,0" />
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Valor de mercado" Binding="{Binding MarketValueText}" Width="140">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Margin" Value="8,0" />
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Patrimonio" Binding="{Binding EquityText}" Width="130">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Margin" Value="8,0" />
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="FontWeight" Value="SemiBold" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn Header="Resultado" SortMemberPath="ReturnText" Width="210">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Margin="8,4">
+                                                <TextBlock Text="{Binding ReturnText}" Style="{StaticResource ReturnText}" FontSize="14" Margin="0" />
+                                                <TextBlock Text="{Binding ReturnSinceText}" Margin="0,2,0,0" Foreground="{StaticResource MutedBrush}" FontSize="11" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Anualizado" Width="180" MinWidth="180">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Margin="8,0,16,0" VerticalAlignment="Center"
+                                                       Text="{Binding AnnualizedText}"
+                                                       Style="{StaticResource ReturnText}"
+                                                       FontSize="13"
+                                                       TextWrapping="NoWrap"
+                                                       Visibility="{Binding ShowAnnualized, Converter={StaticResource BoolVis}}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Grid>
+
+                <Grid Visibility="{Binding Page, Converter={StaticResource EnumVis}, ConverterParameter=Analisis}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Análisis" Style="{StaticResource PageTitle}" />
+                        <TextBlock Text="Estadísticas de trading de la cuenta activa y ranking de contribución al P&amp;L del día."
+                                   Margin="0,6,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding UpdatedText}" Margin="0,4,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" />
+                    </StackPanel>
+                    <UniformGrid Grid.Row="1" Columns="4" Margin="0,16,0,0">
+                        <Border Style="{StaticResource Card}" Margin="0,0,8,0">
+                            <StackPanel>
+                                <TextBlock Text="Win rate" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding StatsWinRateText}" Style="{StaticResource MetricValue}" />
+                                <TextBlock Margin="0,4,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12">
+                                    <Run Text="Ganancias: " /><Run Text="{Binding StatsWinsText, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="4,0">
+                            <StackPanel>
+                                <TextBlock Text="Resultado realizado" Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding StatsTotalRealizedText}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock" BasedOn="{StaticResource MetricValue}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding StatsTotalRealizedTone}" Value="Up">
+                                                    <Setter Property="Foreground" Value="{StaticResource UpBrush}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding StatsTotalRealizedTone}" Value="Down">
+                                                    <Setter Property="Foreground" Value="{StaticResource DownBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Margin="0,4,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12">
+                                    <Run Text="{Binding StatsClosedTradesText, Mode=OneWay}" /><Run Text=" ventas cerradas" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="4,0">
+                            <StackPanel>
+                                <TextBlock Text="Promedio G / P" Style="{StaticResource SectionLabel}" />
+                                <TextBlock FontSize="16" FontWeight="SemiBold">
+                                    <Run Text="{Binding StatsAverageWinText, Mode=OneWay}" Foreground="{StaticResource UpBrush}" />
+                                    <Run Text=" / " Foreground="{StaticResource MutedBrush}" />
+                                    <Run Text="{Binding StatsAverageLossText, Mode=OneWay}" Foreground="{StaticResource DownBrush}" />
+                                </TextBlock>
+                                <TextBlock Margin="0,4,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12">
+                                    <Run Text="Media: " /><Run Text="{Binding StatsAveragePnlText, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="8,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Drawdown máx." Style="{StaticResource SectionLabel}" />
+                                <TextBlock Text="{Binding StatsMaxDrawdownText}" Style="{StaticResource MetricValue}" FontSize="16" />
+                                <TextBlock Margin="0,4,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap">
+                                    <Run Text="Mejor mes: " /><Run Text="{Binding StatsBestMonthText, Mode=OneWay}" />
+                                </TextBlock>
+                                <TextBlock Margin="0,2,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap">
+                                    <Run Text="Peor mes: " /><Run Text="{Binding StatsWorstMonthText, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+                    <Grid Grid.Row="2" Margin="0,16,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Ranking del día (contribución al P&amp;L)" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+                        <Border Grid.Row="1" Style="{StaticResource Card}" VerticalAlignment="Top"
+                                Visibility="{Binding ShowNoAccount, Converter={StaticResource BoolVis}}">
+                            <TextBlock Text="Elige una cuenta para ver el análisis." Foreground="{StaticResource MutedBrush}" />
+                        </Border>
+                        <Border Grid.Row="1" Style="{StaticResource Card}" VerticalAlignment="Top"
+                                Visibility="{Binding ShowEmptyPortfolio, Converter={StaticResource BoolVis}}">
+                            <TextBlock Text="Sin posiciones: el ranking del día aparecerá cuando tengas activos." Foreground="{StaticResource MutedBrush}" />
+                        </Border>
+                        <Border Grid.Row="1" Style="{StaticResource Card}" VerticalAlignment="Top"
+                                Visibility="{Binding ShowEmptyDayRanking, Converter={StaticResource BoolVis}}">
+                            <TextBlock Text="Todavía no hay variación del día para ordenar. Espera a que lleguen cotizaciones." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                        </Border>
+                        <DataGrid Grid.Row="1"
+                                  ItemsSource="{Binding DayRanking}"
+                                  SelectedItem="{Binding SelectedPosition, Mode=OneWay}"
+                                  Visibility="{Binding HasDayRanking, Converter={StaticResource BoolVis}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="#" Binding="{Binding RankText}" Width="50" />
+                                <DataGridTemplateColumn Header="Símbolo" Width="140">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="8,0" VerticalAlignment="Center">
+                                                <ctrl:LogoBadge Symbol="{Binding Symbol}" Size="24" />
+                                                <TextBlock Text="{Binding Symbol}" Margin="8,0,0,0" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Empresa" Binding="{Binding CompanyName}" Width="*" MinWidth="120" />
+                                <DataGridTextColumn Header="Valor" Binding="{Binding MarketValueText}" Width="120" />
+                                <DataGridTemplateColumn Header="Variación" Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding DayChangeText}" Style="{StaticResource ChangeText}" Margin="8,0"
+                                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="P&amp;L día" Width="120">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding DayContributionText}" Style="{StaticResource HeatText}" Margin="8,0"
+                                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="G/P" Width="120">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding UnrealizedText}" Style="{StaticResource ReturnText}" FontSize="13"
+                                                       Margin="8,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Grid>
+
+                <Grid Visibility="{Binding Page, Converter={StaticResource EnumVis}, ConverterParameter=Historial}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <DockPanel LastChildFill="False">
+                        <TextBlock Text="Historial" Style="{StaticResource PageTitle}" VerticalAlignment="Center" />
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Style="{StaticResource SecondaryButton}" Command="{Binding ExportTradesCsvCommand}" IsEnabled="{Binding HasTrades}">
+                                <ctrl:IconLabel Glyph="Save" Text="Exportar CSV" />
+                            </Button>
+                            <Button Margin="8,0,0,0" Style="{StaticResource SecondaryButton}" Command="{Binding BackupDatabaseCommand}">
+                                <ctrl:IconLabel Glyph="Save" Text="Respaldar BD" />
+                            </Button>
+                        </StackPanel>
+                    </DockPanel>
+                    <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,16,0,0" Padding="14,12"
+                            Visibility="{Binding HasActive, Converter={StaticResource BoolVis}}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.2*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Text="Símbolo" Style="{StaticResource SectionLabel}" />
+                                <TextBox Margin="0,6,0,0" Text="{Binding HistorySymbolFilter, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="4,0">
+                                <TextBlock Text="Operación" Style="{StaticResource SectionLabel}" />
+                                <ComboBox Margin="0,6,0,0" ItemsSource="{Binding HistorySideOptions}"
+                                          SelectedItem="{Binding HistorySideFilter}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="4,0">
+                                <TextBlock Text="Desde" Style="{StaticResource SectionLabel}" />
+                                <DatePicker Margin="0,6,0,0"
+                                            SelectedDate="{Binding HistoryFrom, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedDateFormat="Short"
+                                            Language="es-MX"
+                                            ToolTip="Inicio del rango" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" Margin="4,0">
+                                <TextBlock Text="Hasta" Style="{StaticResource SectionLabel}" />
+                                <DatePicker Margin="0,6,0,0"
+                                            SelectedDate="{Binding HistoryTo, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedDateFormat="Short"
+                                            Language="es-MX"
+                                            ToolTip="Fin del rango" />
+                            </StackPanel>
+                            <Button Grid.Column="4" Margin="8,0,0,0" VerticalAlignment="Bottom"
+                                    Style="{StaticResource SecondaryButton}" Command="{Binding ClearHistoryFiltersCommand}"
+                                    ToolTip="Restablecer al mes actual">
+                                <ctrl:IconLabel Glyph="Trash" Text="Limpiar" />
+                            </Button>
+                        </Grid>
+                    </Border>
+                    <Grid Grid.Row="2" Margin="0,16,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Border Style="{StaticResource Card}" VerticalAlignment="Top" Visibility="{Binding ShowNoAccount, Converter={StaticResource BoolVis}}">
+                            <TextBlock Text="Crea una cuenta para guardar el historial de compras, ventas y movimientos de efectivo." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                        </Border>
+                        <Border Style="{StaticResource Card}" VerticalAlignment="Top" Visibility="{Binding ShowEmptyHistory, Converter={StaticResource BoolVis}}">
+                            <TextBlock Text="Esta cuenta todavía no tiene operaciones." Foreground="{StaticResource MutedBrush}" />
+                        </Border>
+                        <Border Style="{StaticResource Card}" VerticalAlignment="Top" Visibility="{Binding ShowEmptyFilteredHistory, Converter={StaticResource BoolVis}}">
+                            <TextBlock Text="Ninguna operación coincide con los filtros." Foreground="{StaticResource MutedBrush}" />
+                        </Border>
+                        <DataGrid ItemsSource="{Binding FilteredTrades}"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                  Visibility="{Binding HasFilteredHistory, Converter={StaticResource BoolVis}}">
+                            <DataGrid.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Margin" Value="8,0" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Fecha" Binding="{Binding When}" Width="150" />
+                                <DataGridTemplateColumn Header="Operación" Width="110">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Side}" Style="{StaticResource SideText}" Margin="10,0" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Símbolo" SortMemberPath="Symbol" Width="156">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="8,0" VerticalAlignment="Center">
+                                                <ctrl:LogoBadge Symbol="{Binding Symbol}" Size="28" VerticalAlignment="Center"
+                                                                Visibility="{Binding IsCash, Converter={StaticResource InverseBoolVis}}" />
+                                                <TextBlock Text="{Binding Symbol}" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Empresa" Binding="{Binding Company}" Width="*" MinWidth="140" />
+                                <DataGridTextColumn Header="Cantidad" Binding="{Binding Quantity}" Width="90" />
+                                <DataGridTextColumn Header="Precio MXN" Binding="{Binding Price}" Width="120" />
+                                <DataGridTextColumn Header="Referencia" Binding="{Binding Reference}" Width="210" />
+                                <DataGridTextColumn Header="Importe" Binding="{Binding Gross}" Width="120" />
+                                <DataGridTextColumn Header="Comisión" Binding="{Binding Commission}" Width="110" />
+                                <DataGridTemplateColumn Header="Resultado" Width="130">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Realized}" Style="{StaticResource RealizedText}" FontSize="13"
+                                                       Margin="8,0" VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Costo prom." Binding="{Binding AverageAfter}" Width="120" />
+                                <DataGridTextColumn Header="Efectivo" Binding="{Binding CashAfter}" Width="130" />
+                                <DataGridTextColumn Header="Diario" Binding="{Binding NotesPreview}" Width="160" />
+                                <DataGridTemplateColumn Header="" Width="88" CanUserSort="False">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Style="{StaticResource SmallSecondary}" Margin="6,0"
+                                                    Command="{Binding DataContext.EditTradeNoteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding}"
+                                                    IsEnabled="{Binding CanEditNotes}"
+                                                    Content="Nota" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DockPanel Grid.Row="1" Margin="0,10,0,0"
+                                   Visibility="{Binding HasFilteredHistory, Converter={StaticResource BoolVis}}">
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal"
+                                        Visibility="{Binding ShowHistoryPager, Converter={StaticResource BoolVis}}">
+                                <Button Style="{StaticResource SecondaryButton}" MinWidth="40" Padding="10,6"
+                                        Command="{Binding HistoryPrevPageCommand}"
+                                        IsEnabled="{Binding CanHistoryPrev}" Content="&lt;" ToolTip="Página anterior" />
+                                <Button Margin="8,0,0,0" Style="{StaticResource SecondaryButton}" MinWidth="40" Padding="10,6"
+                                        Command="{Binding HistoryNextPageCommand}"
+                                        IsEnabled="{Binding CanHistoryNext}" Content="&gt;" ToolTip="Página siguiente" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding HistoryPageText}"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource MutedBrush}"
+                                       FontSize="13" />
+                        </DockPanel>
+                    </Grid>
+                </Grid>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              Visibility="{Binding Page, Converter={StaticResource EnumVis}, ConverterParameter=Cuentas}">
+                    <Grid Margin="0,0,8,12" VerticalAlignment="Top">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Cuentas" Style="{StaticResource PageTitle}" />
+                            <TextBlock Text="Cada cuenta tiene su propio efectivo, sus comisiones y su historial. El monto inicial sugerido es un millón de pesos."
+                                       Margin="0,8,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <Grid Grid.Row="1" Margin="0,18,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="360" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" Text="Cuentas guardadas" Style="{StaticResource SectionLabel}" Margin="0,0,0,8" />
+                                <Border Style="{StaticResource Card}" Padding="8">
+                                    <Grid>
+                                        <TextBlock Text="Todavía no hay cuentas." Foreground="{StaticResource MutedBrush}" Margin="8"
+                                                   Visibility="{Binding HasAccounts, Converter={StaticResource InverseBoolVis}}" />
+                                        <ListBox ItemsSource="{Binding Accounts}" SelectedItem="{Binding InspectedAccount}"
+                                                 Visibility="{Binding HasAccounts, Converter={StaticResource BoolVis}}">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <ctrl:AccountIconBadge Icon="{Binding Icon}" Size="26" VerticalAlignment="Center" />
+                                                            <TextBlock Text="{Binding Name}" Margin="8,0,0,0" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center" />
+                                                            <TextBlock Text="En uso" Margin="10,0,0,0" Foreground="{StaticResource TextBrush}" FontSize="12" VerticalAlignment="Center">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Value="True">
+                                                                                <DataTrigger.Binding>
+                                                                                    <MultiBinding Converter="{StaticResource SameAccount}">
+                                                                                        <Binding />
+                                                                                        <Binding Path="DataContext.ActiveAccount" RelativeSource="{RelativeSource AncestorType=ListBox}" />
+                                                                                    </MultiBinding>
+                                                                                </DataTrigger.Binding>
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Row="1" Margin="0,3,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12"
+                                                                   Text="{Binding SummaryText}" TextWrapping="Wrap"
+                                                                   ToolTip="{Binding Notes}" />
+                                                        <TextBlock Grid.Row="2" Margin="0,4,0,0" Foreground="{StaticResource FaintBrush}" FontSize="11"
+                                                                   Text="{Binding Notes}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="36"
+                                                                   Visibility="{Binding HasNotes, Converter={StaticResource BoolVis}}"
+                                                                   ToolTip="{Binding Notes}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Grid>
+                                </Border>
+                            </DockPanel>
+
+                            <StackPanel Grid.Column="1" Margin="18,0,0,0">
+                                <Border Style="{StaticResource Card}">
+                                    <StackPanel>
+                                        <TextBlock Text="Nueva cuenta" FontSize="18" FontWeight="SemiBold" />
+                                        <TextBlock Text="Nombre" Style="{StaticResource SectionLabel}" Margin="0,14,0,0" />
+                                        <TextBox Margin="0,6,0,0" Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}" MaxLength="60" />
+                                        <TextBlock Text="Icono" Style="{StaticResource SectionLabel}" Margin="0,12,0,0" />
+                                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                            <ctrl:AccountIconBadge Icon="{Binding NewIcon}" Size="36" VerticalAlignment="Center" />
+                                            <TextBox Width="220" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                     Text="{Binding NewIcon, UpdateSourceTrigger=PropertyChanged}"
+                                                     ToolTip="Emoji o URL https de una imagen PNG/JPG con transparencia" />
+                                        </StackPanel>
+                                        <ItemsControl Margin="0,8,0,0" ItemsSource="{Binding AccountIconCategories}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Margin="0,0,0,10">
+                                                        <TextBlock Text="{Binding Name}" Foreground="{StaticResource MutedBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4" />
+                                                        <ItemsControl ItemsSource="{Binding Emojis}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel />
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Button Margin="0,0,6,6" Padding="6" MinHeight="34" MinWidth="34"
+                                                                            Style="{StaticResource SmallSecondary}"
+                                                                            Command="{Binding DataContext.PickNewIconCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                            CommandParameter="{Binding}">
+                                                                        <ctrl:AccountIconBadge Icon="{Binding}" Size="22" />
+                                                                    </Button>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock Margin="0,2,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap"
+                                                   Text="El icono se muestra sobre fondo negro, como los logos de empresas. Puedes pegar un emoji o una URL gratuita de PNG transparente." />
+                                        <TextBlock Text="Tipo de mercado" Style="{StaticResource SectionLabel}" Margin="0,12,0,0" />
+                                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                            <RadioButton GroupName="NewMarket" Style="{StaticResource SegmentButton}" Margin="0,0,8,0"
+                                                         IsChecked="{Binding NewIsStocks, Mode=TwoWay}" Content="Bolsa" />
+                                            <RadioButton GroupName="NewMarket" Style="{StaticResource SegmentButton}"
+                                                         IsChecked="{Binding NewIsCrypto, Mode=TwoWay}" Content="Crypto" />
+                                        </StackPanel>
+                                        <TextBlock Margin="0,8,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap"
+                                                   Text="Bolsa usa horario regular y cola al cerrar. Crypto opera 24/7 al precio actual." />
+                                        <TextBlock Text="Efectivo inicial (MXN)" Style="{StaticResource SectionLabel}" Margin="0,12,0,0" />
+                                        <TextBox Margin="0,6,0,0" Text="{Binding NewInitial, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock Text="Si lo dejas en 1000000, la cuenta empieza con 1,000,000.00 MXN."
+                                                   Margin="0,6,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap" />
+                                        <Grid Margin="0,12,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,8,0">
+                                                <TextBlock Text="Comisión al comprar (%)" Style="{StaticResource SectionLabel}" />
+                                                <TextBox Margin="0,6,0,0" Text="{Binding NewBuy, UpdateSourceTrigger=PropertyChanged}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                                <TextBlock Text="Comisión al vender (%)" Style="{StaticResource SectionLabel}" />
+                                                <TextBox Margin="0,6,0,0" Text="{Binding NewSell, UpdateSourceTrigger=PropertyChanged}" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock Text="0.10 significa 0.10% del importe de la operación. La comisión se descuenta del efectivo y no entra al costo promedio."
+                                                   Margin="0,8,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap" />
+                                        <TextBlock Text="Descripción" Style="{StaticResource SectionLabel}" Margin="0,12,0,0" />
+                                        <TextBox Margin="0,6,0,0"
+                                                 MinHeight="96"
+                                                 AcceptsReturn="True"
+                                                 TextWrapping="Wrap"
+                                                 VerticalScrollBarVisibility="Auto"
+                                                 MaxLength="4000"
+                                                 Text="{Binding NewNotes, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock Margin="0,6,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap"
+                                                   Text="Método de selección, criterios, referencias o cualquier nota libre sobre este portafolio." />
+                                        <Button Margin="0,16,0,0" HorizontalAlignment="Left" Style="{StaticResource PrimaryButton}"
+                                                Command="{Binding CreateAccountCommand}">
+                                            <ctrl:IconLabel Glyph="AddUser" Text="Crear cuenta" />
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource Card}" Margin="0,14,0,0" Visibility="{Binding HasInspected, Converter={StaticResource BoolVis}}">
+                                    <StackPanel>
+                                        <TextBlock Text="Cuenta seleccionada" FontSize="18" FontWeight="SemiBold" />
+                                        <TextBlock Margin="0,8,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap"
+                                                   Text="{Binding InspectedAccount.SummaryText, Mode=OneWay}" />
+                                        <TextBlock Text="Aportación o retiro (MXN)" Style="{StaticResource SectionLabel}" Margin="0,14,0,0" />
+                                        <Grid Margin="0,6,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Text="{Binding CashMoveAmount, UpdateSourceTrigger=PropertyChanged}" />
+                                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                                     Text="{Binding CashMoveNote, UpdateSourceTrigger=PropertyChanged}"
+                                                     ToolTip="Nota opcional" />
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                            <Button Style="{StaticResource PrimaryButton}" Command="{Binding DepositCashCommand}"
+                                                    IsEnabled="{Binding HasInspected}">
+                                                <ctrl:IconLabel Glyph="AddUser" Text="Aportar" />
+                                            </Button>
+                                            <Button Margin="8,0,0,0" Style="{StaticResource DangerButton}" Command="{Binding WithdrawCashCommand}"
+                                                    IsEnabled="{Binding HasInspected}">
+                                                <ctrl:IconLabel Glyph="Trash" Text="Retirar" />
+                                            </Button>
+                                        </StackPanel>
+                                        <TextBlock Margin="0,8,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap"
+                                                   Text="Las aportaciones y retiros ajustan el capital invertido usado en el rendimiento de esta cuenta." />
+                                        <TextBlock Text="Nombre" Style="{StaticResource SectionLabel}" Margin="0,14,0,0" />
+                                        <TextBox Margin="0,6,0,0" Text="{Binding EditName, UpdateSourceTrigger=PropertyChanged}" MaxLength="60" />
+                                        <TextBlock Text="Icono" Style="{StaticResource SectionLabel}" Margin="0,12,0,0" />
+                                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                            <ctrl:AccountIconBadge Icon="{Binding EditIcon}" Size="36" VerticalAlignment="Center" />
+                                            <TextBox Width="220" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                     Text="{Binding EditIcon, UpdateSourceTrigger=PropertyChanged}"
+                                                     ToolTip="Emoji o URL https de una imagen PNG/JPG con transparencia" />
+                                        </StackPanel>
+                                        <ItemsControl Margin="0,8,0,0" ItemsSource="{Binding AccountIconCategories}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Margin="0,0,0,10">
+                                                        <TextBlock Text="{Binding Name}" Foreground="{StaticResource MutedBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4" />
+                                                        <ItemsControl ItemsSource="{Binding Emojis}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel />
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Button Margin="0,0,6,6" Padding="6" MinHeight="34" MinWidth="34"
+                                                                            Style="{StaticResource SmallSecondary}"
+                                                                            Command="{Binding DataContext.PickEditIconCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                            CommandParameter="{Binding}">
+                                                                        <ctrl:AccountIconBadge Icon="{Binding}" Size="22" />
+                                                                    </Button>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock Text="Tipo de mercado" Style="{StaticResource SectionLabel}" Margin="0,12,0,0" />
+                                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0"
+                                                    IsEnabled="{Binding CanEditMarketKind}">
+                                            <RadioButton GroupName="EditMarket" Style="{StaticResource SegmentButton}" Margin="0,0,8,0"
+                                                         IsChecked="{Binding EditIsStocks, Mode=TwoWay}" Content="Bolsa" />
+                                            <RadioButton GroupName="EditMarket" Style="{StaticResource SegmentButton}"
+                                                         IsChecked="{Binding EditIsCrypto, Mode=TwoWay}" Content="Crypto" />
+                                        </StackPanel>
+                                        <TextBlock Margin="0,8,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap"
+                                                   Text="El tipo solo se puede cambiar si la cuenta no tiene posiciones." />
+                                        <Grid Margin="0,12,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,8,0">
+                                                <TextBlock Text="Comisión al comprar (%)" Style="{StaticResource SectionLabel}" />
+                                                <TextBox Margin="0,6,0,0" Text="{Binding EditBuy, UpdateSourceTrigger=PropertyChanged}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                                <TextBlock Text="Comisión al vender (%)" Style="{StaticResource SectionLabel}" />
+                                                <TextBox Margin="0,6,0,0" Text="{Binding EditSell, UpdateSourceTrigger=PropertyChanged}" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock Text="Descripción" Style="{StaticResource SectionLabel}" Margin="0,12,0,0" />
+                                        <TextBox Margin="0,6,0,0"
+                                                 MinHeight="110"
+                                                 AcceptsReturn="True"
+                                                 TextWrapping="Wrap"
+                                                 VerticalScrollBarVisibility="Auto"
+                                                 MaxLength="4000"
+                                                 Text="{Binding EditNotes, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock Margin="0,6,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap"
+                                                   Text="Método de selección, criterios, referencias o cualquier nota libre sobre este portafolio." />
+                                        <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                                            <Button Style="{StaticResource SecondaryButton}" Command="{Binding SaveInspectedCommand}">
+                                                <ctrl:IconLabel Glyph="Save" Text="Guardar cambios" />
+                                            </Button>
+                                            <Button Margin="8,0,0,0" Style="{StaticResource PrimaryButton}"
+                                                    Command="{Binding ActivateInspectedCommand}" IsEnabled="{Binding CanActivateInspected}">
+                                                <ctrl:IconLabel Glyph="Use" Text="Usar esta cuenta" />
+                                            </Button>
+                                            <Button Margin="8,0,0,0" Style="{StaticResource DangerButton}" Command="{Binding DeleteInspectedCommand}">
+                                                <ctrl:IconLabel Glyph="Trash" Text="Eliminar" />
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                                <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                                    <Button Style="{StaticResource SecondaryButton}" Command="{Binding BackupDatabaseCommand}">
+                                        <ctrl:IconLabel Glyph="Save" Text="Respaldar base de datos" />
+                                    </Button>
+                                    <Button Margin="8,0,0,0" Style="{StaticResource SecondaryButton}" Command="{Binding CopyDatabasePathCommand}">
+                                        <ctrl:IconLabel Glyph="Search" Text="Copiar ruta" />
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="{Binding DatabaseHint}" Margin="0,10,0,0" Foreground="{StaticResource FaintBrush}" FontSize="12" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              Visibility="{Binding Page, Converter={StaticResource EnumVis}, ConverterParameter=Acerca}">
+                    <StackPanel MaxWidth="760" HorizontalAlignment="Left" Margin="0,0,8,12">
+                        <Image Source="/Assets/LogoSplash.png"
+                               MaxWidth="520"
+                               HorizontalAlignment="Left"
+                               Stretch="Uniform"
+                               RenderOptions.BitmapScalingMode="HighQuality" />
+                        <TextBlock Text="Acerca de SimTrade" Style="{StaticResource PageTitle}" Margin="0,18,0,0" TextWrapping="Wrap" />
+                        <TextBlock Margin="0,8,0,0"
+                                   FontSize="15"
+                                   Foreground="{StaticResource MutedBrush}"
+                                   Text="{Binding VersionText}" />
+                        <TextBlock Margin="0,16,0,0"
+                                   FontSize="15"
+                                   Foreground="{StaticResource MutedBrush}"
+                                   TextWrapping="Wrap"
+                                   LineHeight="22"
+                                   Text="SimTrade es un simulador de portafolios en pesos mexicanos. Puedes crear cuentas de Bolsa o Crypto, comprar y vender con Órdenes de mercado o limitadas, seguir precios, RSI, rangos y el rendimiento de tus cuentas sin usar dinero real." />
+                        <TextBlock Margin="0,12,0,0"
+                                   FontSize="15"
+                                   Foreground="{StaticResource MutedBrush}"
+                                   TextWrapping="Wrap"
+                                   LineHeight="22"
+                                   Text="Los precios y el tipo de cambio se consultan en Yahoo Finance. Es una herramienta educativa y de práctica; no ejecuta operaciones en el mercado real." />
+
+                        <Border Margin="0,22,0,0" Style="{StaticResource Card}" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="Actualizaciones" FontSize="16" FontWeight="SemiBold" />
+                                <TextBlock Margin="0,8,0,0"
+                                           FontSize="14"
+                                           Foreground="{StaticResource MutedBrush}"
+                                           TextWrapping="Wrap"
+                                           Text="{Binding UpdateStatusText}" />
+                                <ProgressBar Margin="0,12,0,0"
+                                             Height="8"
+                                             Minimum="0"
+                                             Maximum="100"
+                                             Value="{Binding UpdateProgress}"
+                                             Visibility="{Binding ShowUpdateProgress, Converter={StaticResource BoolVis}}" />
+                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                    <Button Style="{StaticResource SecondaryButton}"
+                                            Command="{Binding CheckForUpdatesCommand}"
+                                            IsEnabled="{Binding CanCheckUpdates}"
+                                            Content="Buscar actualizaciones" />
+                                    <Button Margin="8,0,0,0"
+                                            Style="{StaticResource PrimaryButton}"
+                                            Command="{Binding InstallUpdateCommand}"
+                                            IsEnabled="{Binding CanInstallUpdate}"
+                                            Content="Descargar e instalar" />
+                                    <Button Margin="8,0,0,0"
+                                            Style="{StaticResource GhostButton}"
+                                            Command="{Binding OpenReleasesPageCommand}"
+                                            Content="Ver en GitHub" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Margin="0,22,0,0"
+                                   FontSize="15"
+                                   Foreground="{StaticResource TextBrush}"
+                                   TextWrapping="Wrap"
+                                   LineHeight="22"
+                                   Text="Si esta aplicación te es útil, considera hacer una donación para poder continuar mejorándola." />
+
+                        <TextBlock Text="Nombre" Margin="0,28,0,8" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding DonationName}" FontSize="16" />
+
+                        <TextBlock Text="Banco" Margin="0,22,0,8" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding DonationBank}" FontSize="16" />
+
+                        <TextBlock Text="CLABE" Margin="0,22,0,8" FontWeight="SemiBold" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding DonationClabe}"
+                                       FontSize="18"
+                                       FontFamily="Consolas"
+                                       VerticalAlignment="Center" />
+                            <Button Content="Copiar"
+                                    Margin="12,0,0,0"
+                                    Style="{StaticResource SmallSecondary}"
+                                    VerticalAlignment="Center"
+                                    Command="{Binding CopyClabeCommand}"
+                                    ToolTip="Copiar la CLABE al portapapeles" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding DonationStatus}"
+                                   Margin="0,10,0,0"
+                                   Foreground="{StaticResource TextBrush}"
+                                   TextWrapping="Wrap" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,22,0,0">
+                            <TextBlock Text="Contacto: "
+                                       FontSize="15"
+                                       Foreground="{StaticResource MutedBrush}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding ContactEmail}"
+                                       FontSize="15"
+                                       Foreground="{StaticResource TextBrush}"
+                                       VerticalAlignment="Center" />
+                            <Button Content="Copiar"
+                                    Margin="12,0,0,0"
+                                    Style="{StaticResource SmallSecondary}"
+                                    VerticalAlignment="Center"
+                                    Command="{Binding CopyContactCommand}"
+                                    ToolTip="Copiar el correo al portapapeles" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding ContactStatus}"
+                                   Margin="0,10,0,0"
+                                   Foreground="{StaticResource TextBrush}"
+                                   TextWrapping="Wrap" />
+
+                        <Border Height="1" Margin="0,28,0,0" Background="{StaticResource LineBrush}" />
+
+                        <TextBlock Text="Descargo de responsabilidad" Margin="0,22,0,6" FontSize="16" FontWeight="SemiBold" />
+                        <TextBlock Margin="0,8,0,0"
+                                   FontSize="15"
+                                   Foreground="{StaticResource MutedBrush}"
+                                   TextWrapping="Wrap"
+                                   LineHeight="22"
+                                   Text="• Toda inversión implica riesgo, y el desempeño pasado de un valor, una industria, un sector, un mercado, un producto financiero, una estrategia de operación o la operación de una persona no garantiza resultados ni rendimientos futuros. Quien invierte es plenamente responsable de las decisiones que tome. Esas decisiones deben basarse únicamente en la evaluación de su situación financiera, sus objetivos de inversión, su tolerancia al riesgo y sus necesidades de liquidez." />
+                        <TextBlock Margin="0,12,0,8"
+                                   FontSize="15"
+                                   Foreground="{StaticResource MutedBrush}"
+                                   TextWrapping="Wrap"
+                                   LineHeight="22"
+                                   Text="• Las opiniones, noticias, investigaciones, análisis, precios y cualquier otra información que se ofrezca se proporcionan como comentario general de mercado y no constituyen asesoría de inversión. No aceptará responsabilidad por ninguna pérdida o daño, incluida, sin limitación, cualquier pérdida de ganancias, que pueda surgir de forma directa o indirecta del uso de esa información o de confiar en ella." />
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="1" Grid.ColumnSpan="2" Background="#070707" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Padding="16,0">
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding StatusText}" Style="{StaticResource StatusText}" />
+                <TextBlock Grid.Column="1"
+                           Text="{Binding NasdaqStatus}"
+                           Margin="18,0,0,0"
+                           Foreground="{StaticResource TextBrush}"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           ToolTip="Horario regular del NASDAQ, de 9:30 a 16:00, hora del este de Estados Unidos. El fin de semana y los festivos cuentan hasta la siguiente apertura. El día después de Acción de Gracias y el 24 de diciembre cierran a la 1 de la tarde." />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
+

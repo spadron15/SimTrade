@@ -1,0 +1,112 @@
+﻿<Window x:Class="SimTrade.PriceChartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:SimTrade.Controls"
+        Title="Gráfica"
+        Width="960"
+        Height="760"
+        MinWidth="680"
+        MinHeight="520"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Background="{StaticResource BgBrush}"
+        Foreground="{StaticResource TextBrush}"
+        FontFamily="Segoe UI"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+    <DockPanel Margin="22,18,22,16">
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,18,0">
+                <ctrl:LogoBadge x:Name="SymbolLogo"
+                                Size="32"
+                                VerticalAlignment="Center" />
+                <TextBlock x:Name="SymbolText"
+                           Margin="10,0,0,0"
+                           FontSize="26"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <TextBlock x:Name="NameText"
+                           Margin="12,0,0,0"
+                           FontSize="22"
+                           VerticalAlignment="Center"
+                           Foreground="{StaticResource MutedBrush}"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel x:Name="QuotePanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
+                    <TextBlock x:Name="PriceText" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <TextBlock x:Name="ChangeAmountText" Margin="14,0,0,0" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <TextBlock x:Name="ChangePercentText" Margin="10,0,0,0" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel x:Name="RsiPanel" Orientation="Horizontal" VerticalAlignment="Center" Margin="22,0,0,0" Visibility="Collapsed">
+                    <TextBlock Text="RSI" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" />
+                    <TextBlock x:Name="RsiValueText" Margin="8,0,0,0" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <TextBlock x:Name="RsiSignalText" Margin="8,0,0,0" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,8,0,0">
+            <CheckBox x:Name="ShowMa20" Content="MA 20" IsChecked="True" Margin="0,0,14,0" Checked="Indicator_Changed" Unchecked="Indicator_Changed" />
+            <CheckBox x:Name="ShowMa50" Content="MA 50" IsChecked="True" Margin="0,0,14,0" Checked="Indicator_Changed" Unchecked="Indicator_Changed" />
+            <CheckBox x:Name="ShowMacd" Content="MACD" IsChecked="True" Checked="Indicator_Changed" Unchecked="Indicator_Changed" />
+        </StackPanel>
+        <TextBlock x:Name="Status"
+                   DockPanel.Dock="Top"
+                   Margin="0,6,0,14"
+                   FontSize="14"
+                   Foreground="{StaticResource TextBrush}"
+                   TextWrapping="Wrap"
+                   Text="Consultando Yahoo Finance…" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="*" />
+                <RowDefinition x:Name="MacdRow" Height="*" />
+            </Grid.RowDefinitions>
+            <DockPanel>
+                <TextBlock x:Name="PriceHeading"
+                           DockPanel.Dock="Top"
+                           Margin="0,0,0,6"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource MutedBrush}"
+                           Text="Precio · MA20 / MA50" />
+                <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="12">
+                    <ctrl:LineChart x:Name="PriceChart" Margin="8,4,8,4" />
+                </Border>
+            </DockPanel>
+            <DockPanel Grid.Row="1" Margin="0,14,0,0">
+                <TextBlock x:Name="RsiHeading"
+                           DockPanel.Dock="Top"
+                           Margin="0,0,0,6"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource MutedBrush}"
+                           Text="RSI (14)" />
+                <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="12">
+                    <ctrl:LineChart x:Name="RsiChart"
+                                    Margin="8,4,8,4"
+                                    FillKind="Rsi"
+                                    FixedMinimum="0"
+                                    FixedMaximum="100"
+                                    ValueFormat="0" />
+                </Border>
+            </DockPanel>
+            <DockPanel x:Name="MacdPanel" Grid.Row="2" Margin="0,14,0,0">
+                <TextBlock DockPanel.Dock="Top"
+                           Margin="0,0,0,6"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource MutedBrush}"
+                           Text="MACD (12, 26, 9)" />
+                <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="12">
+                    <ctrl:LineChart x:Name="MacdChart" Margin="8,4,8,4" ValueFormat="+0.00;-0.00;0.00" />
+                </Border>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</Window>
